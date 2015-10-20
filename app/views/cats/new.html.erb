@@ -1,6 +1,7 @@
 <h1> Make a new cat! </h1>
 
-<form method="post" action="<%= cats_url %>">
+<%= render "form", cat: @cat %>
+<!-- <form method="post" action="<%= cats_url %>">
 <label for="cat-name"> Cat Name: </label>
 <input id="cat-name" type="text" name="cat[name]" value=""> <br>
 
@@ -26,4 +27,4 @@
 <br>
 
 <button type="submit">Submit</button>
-</form>
+</form> -->
