@@ -1,6 +1,6 @@
 <h1> Make a new cat! </h1>
 
-<form method="post">
+<form method="post" action="<%= cats_url %>">
 <label for="cat-name"> Cat Name: </label>
 <input id="cat-name" type="text" name="cat[name]" value=""> <br>
 
@@ -10,7 +10,20 @@
 
 <label for="color">Pick cat color!</label><br>
 <select id="color" name="cat[color]">
-  <option>
+  <option value=""></option>
+  <option value="brown">Brown</option>
+  <option value="orange">Orange</option>
+  <option value="black">Black</option>
+  <option value="calico">Calico</option>
 </select>
+<br>
 
+<label for="birth_date">Pick the birth date!</label>
+<input id="birth_date" type="date" name="cat[birth_date]"></input><br>
+
+<label for="description">Describe your cat:</label>
+<textarea id="description" name="cat[description]"></textarea>
+<br>
+
+<button type="submit">Submit</button>
 </form>

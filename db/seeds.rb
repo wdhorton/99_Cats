@@ -8,7 +8,7 @@
 Cat.destroy_all
 
 Cat.create!(
-            birth_date: DateTime.current,
+            birth_date: Date.current,
             color: "orange",
             name: "Pizza",
             sex: "M",
