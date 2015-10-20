@@ -8,11 +8,8 @@ class CatRentalRequest < ActiveRecord::Base
   belongs_to :cat
 
   def overlapping_requests
-    CatRentalRequest.where("cat_id = :cat_id
-                           AND (start_date BETWEEN :start_date AND :end_date
-                           OR end_date BETWEEN :start_date AND :end_date)
-                           AND id != :id", { cat_id: cat_id, start_date: start_date,
-                                             end_date: end_date, id: id } )
+    CatRentalRequest.where("cat_id = :cat_id AND (start_date < :end_date AND end_date > :start_date) AND id != :id",
+                          { cat_id: cat_id, start_date: start_date, end_date: end_date, id: id })
   end
 
   def overlapping_approved_requests

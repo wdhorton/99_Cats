@@ -8,4 +8,20 @@
       <td> <%= key == "birth_date" ? @cat.age : val %> </td>
     </tr>
   <% end %>
+</table><br>
+
+<table>
+  <tr>
+    <th> Request ID </th>
+    <th> Start Date </th>
+    <th> End Date   </th>
+  </tr>
+
+  <% @cat.cat_rental_requests.sort_by { |request| request.start_date }.each do |request| %>
+    <tr>
+      <td> <%= request.id %> </td>
+      <td> <%= request.start_date %> </td>
+      <td> <%= request.end_date %> </td>
+    </tr>
+  <% end %>
 </table>

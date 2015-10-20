@@ -4,8 +4,8 @@ class Cat < ActiveRecord::Base
   validates :birth_date, :color, :name, :sex, presence: true
   validates :color, inclusion: { in: CAT_COLOR }
 
-  has_many :cat_rental_requests
-  
+  has_many :cat_rental_requests, dependent: :destroy
+
   def age
     (Date.current - birth_date).to_i.to_s + " days"
   end
