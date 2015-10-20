@@ -15,6 +15,7 @@
     <th> Request ID </th>
     <th> Start Date </th>
     <th> End Date   </th>
+    <th> Approve </th>
   </tr>
 
   <% @cat.cat_rental_requests.sort_by { |request| request.start_date }.each do |request| %>
@@ -22,6 +23,7 @@
       <td> <%= request.id %> </td>
       <td> <%= request.start_date %> </td>
       <td> <%= request.end_date %> </td>
+      <td> <%= (button_to "Approve", approve_cat_rental_request_url(request), method: "patch") if request.status == "Pending" %> </td>
     </tr>
   <% end %>
 </table>

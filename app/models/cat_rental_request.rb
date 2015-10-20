@@ -1,3 +1,4 @@
+require 'byebug'
 class CatRentalRequest < ActiveRecord::Base
   RENTAL_STATUSES = [ "Pending", "Approved", "Denied" ]
 
@@ -7,18 +8,46 @@ class CatRentalRequest < ActiveRecord::Base
 
   belongs_to :cat
 
+
   def overlapping_requests
-    CatRentalRequest.where("cat_id = :cat_id AND (start_date < :end_date AND end_date > :start_date) AND id != :id",
-                          { cat_id: cat_id, start_date: start_date, end_date: end_date, id: id })
+    query = <<-SQL
+      cat_id = :cat_id
+      AND (start_date < :end_date AND end_date > :start_date)
+      AND (:id IS NULL OR id != :id)
+    SQL
+
+    CatRentalRequest.where(query,
+      cat_id: cat_id,
+      start_date: start_date,
+      end_date: end_date,
+      id: id
+    )
   end
 
   def overlapping_approved_requests
     overlapping_requests.where(status: "Approved")
   end
 
+  def overlapping_pending_requests
+    overlapping_requests.where(status: "Pending")
+  end
+
   def cannot_approve_overlapping_requests
-    if !overlapping_requests.empty?
+    if !overlapping_approved_requests.empty? && status == "Approved"
       errors.add(:start_date, "cannot overlap with approved requests")
     end
   end
+
+  def approve!
+    CatRentalRequest.transaction do
+      # debugger
+      update!(status: "Approved")
+      overlapping_pending_requests.each(&:deny!)
+    end
+  end
+
+  def deny!
+    update!(status: "Denied")
+  end
+
 end
