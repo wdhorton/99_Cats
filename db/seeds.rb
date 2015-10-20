@@ -7,10 +7,26 @@
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 Cat.destroy_all
 
-Cat.create!(
-            birth_date: Date.current,
-            color: "orange",
-            name: "Pizza",
-            sex: "M",
-            description: "Pizza likes to be pat on the head."
-            )
+
+
+5.times do |i|
+  Cat.create!(
+              birth_date: Date.current,
+              color: Cat::CAT_COLOR.sample,
+              name: "Cat #{i}",
+              sex: ["M", "F"].sample,
+              description: "Description of Cat #{i}."
+              )
+end
+
+4.times do |i|
+  CatRentalRequest.create!(
+                            cat_id: Cat.first.id,
+                            start_date: Date.new(2015, 1 + i, 1),
+                            end_date: Date.new(2015, 1 + i, 3)
+                          )
+end
+
+Cat.all.each do |cat|
+  cat.cat_rental_requests.create!(start_date: Date.new(2014, 1, 1), end_date: Date.new(2014, 1, 3))
+end
