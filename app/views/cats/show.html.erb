@@ -1,0 +1,11 @@
+<h1><%= @cat.name %></h1>
+
+<table>
+  <% @cat.attributes.each do |key, val| %>
+    <% next if key == "id" || key == "name" %>
+    <tr>
+      <td> <%= key == "birth_date" ? "age" : key %> </td>
+      <td> <%= key == "birth_date" ? @cat.age : val %> </td>
+    </tr>
+  <% end %>
+</table>
