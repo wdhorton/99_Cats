@@ -37,7 +37,8 @@ class ApplicationController < ActionController::Base
     end
 
     def ensure_user_owns_cat
-      if !current_user.cats.find(param[:id])
+      request = CatRentalRequest.find(params[:id])
+      if !current_user.cats.find(request.cat_id)
         redirect_to cats_url
       end
     end
