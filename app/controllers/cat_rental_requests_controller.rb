@@ -25,7 +25,8 @@ class CatRentalRequestsController < ApplicationController
   end
 
   def create
-    if (@request = CatRentalRequest.create(cat_request_params))
+    @request = CatRentalRequest.new(cat_request_params)
+    if @request.save
       render :show
     else
       render json: @request.errors.full_messages

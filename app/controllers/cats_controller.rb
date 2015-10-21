@@ -15,7 +15,8 @@ class CatsController < ApplicationController
     end
 
     def create
-      if (@cat = Cat.create(cat_params))
+      @cat = Cat.new(cat_params)
+      if @cat.save
         render :show
       else
         render json: @cat.errors.full_messages

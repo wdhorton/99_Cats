@@ -5,7 +5,7 @@
     <% next if key == "id" || key == "name" %>
     <tr>
       <td> <%= key == "birth_date" ? "age" : key %> </td>
-      <td> <%= key == "birth_date" ? @cat.age : val %> </td>
+      <td> <%= key == "birth_date" ? "#{@cat.age} old" : val %> </td>
     </tr>
   <% end %>
 </table><br>

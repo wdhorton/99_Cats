@@ -1,10 +1,12 @@
-require 'byebug'
 class CatRentalRequest < ActiveRecord::Base
   RENTAL_STATUSES = [ "Pending", "Approved", "Denied" ]
 
   validates :cat_id, :start_date, :end_date, :status, presence: true
   validates :status, inclusion: { in: RENTAL_STATUSES }
   validate :cannot_approve_overlapping_requests
+
+  validate :cannot_end_rental_before_it_starts
+  validate :cannot_start_rental_before_today
 
   belongs_to :cat
 
@@ -24,23 +26,8 @@ class CatRentalRequest < ActiveRecord::Base
     )
   end
 
-  def overlapping_approved_requests
-    overlapping_requests.where(status: "Approved")
-  end
-
-  def overlapping_pending_requests
-    overlapping_requests.where(status: "Pending")
-  end
-
-  def cannot_approve_overlapping_requests
-    if !overlapping_approved_requests.empty? && status == "Approved"
-      errors.add(:start_date, "cannot overlap with approved requests")
-    end
-  end
-
   def approve!
     CatRentalRequest.transaction do
-      # debugger
       update!(status: "Approved")
       overlapping_pending_requests.each(&:deny!)
     end
@@ -49,5 +36,45 @@ class CatRentalRequest < ActiveRecord::Base
   def deny!
     update!(status: "Denied")
   end
+
+  def denied?
+    status == "Denied"
+  end
+
+  private
+
+    def overlapping_approved_requests
+      overlapping_requests.where(status: "Approved")
+    end
+
+    def overlapping_pending_requests
+      overlapping_requests.where(status: "Pending")
+    end
+
+    def cannot_approve_overlapping_requests
+      return if denied?
+
+      if !overlapping_approved_requests.empty? && status == "Approved"
+        errors[:base] << "cannot overlap with approved requests"
+      end
+
+    end
+
+    def cannot_end_rental_before_it_starts
+      return if start_date < end_date
+      errors[:start_date] << "must come before end date"
+      errors[:end_date] << "must come before start date"
+    end
+
+    def cannot_start_rental_before_today
+      return unless id.nil?
+
+      time_diff = start_date <=> Date.today
+      if time_diff == -1
+        errors[:start_date] << "must be in the present or future"
+      end
+
+    end
+
 
 end
