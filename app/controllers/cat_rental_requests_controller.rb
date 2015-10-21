@@ -14,15 +14,17 @@ class CatRentalRequestsController < ApplicationController
 
   def new
     @cats = Cat.all
+    @id = params[:id].to_i
     render :new
   end
 
   def create
-    @request = CatRentalRequest.new(cat_request_params)
+    @request = current_user.requests.new(cat_request_params)
     if @request.save
       render :show
     else
-      render json: @request.errors.full_messages
+      flash.now[:errors] = @request.errors.full_messages
+      render :new
     end
   end
 

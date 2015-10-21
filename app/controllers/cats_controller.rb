@@ -13,15 +13,17 @@ class CatsController < ApplicationController
   end
 
   def new
+    @cat = Cat.new
     render :new
   end
 
   def create
-    @cat = Cat.new(cat_params, current_user.id)
+    @cat = current_user.cats.new(cat_params)
     if @cat.save
-      render :show
+      redirect_to cat_url(@cat.id)
     else
-      render json: @cat.errors.full_messages
+      flash.now[:errors] = @cat.errors.full_messages
+      render :new
     end
   end
 
@@ -35,7 +37,8 @@ class CatsController < ApplicationController
     if @cat.update(cat_params)
       render :show
     else
-      render json: @cat.errors.full_messages
+      flash.now[:errors] = @cat.errors.full_messages
+      render :edit
     end
   end
 

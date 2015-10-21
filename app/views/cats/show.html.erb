@@ -1,13 +1,29 @@
 <h1><%= @cat.name %></h1>
 
+<% if current_user != @cat.owner %>
+  <a href="<%= new_cat_rental_request_url(id: @cat.id) %>">Rent this cat!</a>
+<% end %>
 <table>
-  <% @cat.attributes.each do |key, val| %>
-    <% next if key == "id" || key == "name" %>
-    <tr>
-      <td> <%= key == "birth_date" ? "age" : key %> </td>
-      <td> <%= key == "birth_date" ? "#{@cat.age} old" : val %> </td>
-    </tr>
-  <% end %>
+  <tr>
+    <td> age </td>
+    <td> <%= @cat.age %> </td>
+  </tr>
+
+  <tr>
+    <td> color </td>
+    <td> <%= @cat.color %> </td>
+  </tr>
+
+  <tr>
+    <td> owner </td>
+    <td> <%= @cat.owner.username %> </td>
+  </tr>
+
+  <tr>
+    <td> description </td>
+    <td> <%= @cat.description %> </td>
+  </tr>
+
 </table><br>
 
 <table>
@@ -15,19 +31,31 @@
     <th> Request ID </th>
     <th> Start Date </th>
     <th> End Date   </th>
+    <th> Requester Username </th>
     <th> Approve </th>
   </tr>
 
-  <% @cat.cat_rental_requests.sort_by { |request| request.start_date }.each do |request| %>
+  <% @cat.cat_rental_requests.includes(:requester).sort_by { |request| request.start_date }.each do |request| %>
     <tr>
       <td>
-        <%= request.id %> </td>
+        <%= request.id %>
+      </td>
+
       <td>
-        <%= request.start_date %> </td>
+        <%= request.start_date %>
+      </td>
+
       <td>
-        <%= request.end_date %> </td>
+        <%= request.end_date %>
+      </td>
+
       <td>
-        <%= (button_to "Approve", approve_cat_rental_request_url(request), method: "patch") if request.status == "Pending" && @cat.owner == current_user %> </td>
+        <%= request.requester.username %>
+      </td>
+
+      <td>
+        <%= (button_to "Approve", approve_cat_rental_request_url(request), method: "patch") if request.status == "Pending" && @cat.owner == current_user %>
+      </td>
     </tr>
   <% end %>
 </table>

@@ -1,7 +1,7 @@
 class CatRentalRequest < ActiveRecord::Base
   RENTAL_STATUSES = [ "Pending", "Approved", "Denied" ]
 
-  validates :cat_id, :start_date, :end_date, :status, presence: true
+  validates :cat_id, :start_date, :end_date, :status, :requester, presence: true
   validates :status, inclusion: { in: RENTAL_STATUSES }
   validate :cannot_approve_overlapping_requests
 
@@ -9,7 +9,7 @@ class CatRentalRequest < ActiveRecord::Base
   validate :cannot_start_rental_before_today
 
   belongs_to :cat
-
+  belongs_to :requester, class_name: "User", foreign_key: :user_id
 
   def overlapping_requests
     query = <<-SQL

@@ -1,31 +1,46 @@
+<% if cat.persisted? %>
+  <% action, value = cat_url(cat.id), "put" %>
+<% else %>
+  <% action, value = cats_url, "post" %>
+<% end %>
 
-<form method="post" action="<%= cat.nil? ? cats_url : cat_url(cat.id) %>">
+<form method="post" action="<%= action %>">
 
   <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
-  <input type="hidden" name="_method" value='<%= cat ? "put" : "post" %>'>
+  <input type="hidden" name="_method" value='<%= value %>'>
 
   <label for="cat-name"> Cat Name: </label>
-  <input id="cat-name" type="text" name="cat[name]" value="<%= cat.name unless cat.nil? %>"></input> <br>
+  <input id="cat-name" type="text" name="cat[name]" value="<%= cat.name %>">
+  <br>
 
-  <label for="sex">Sex:</label> <br>
-  <input id="sex" type="radio" name="cat[sex]" value="M" <%= "checked" if cat.nil? || cat.sex == "M" %> > M </input> <br>
-  <input id="sex" type="radio" name="cat[sex]" value="F" <%= "checked" if cat && cat.sex == "F" %> > F </input> <br>
+  <label for="male_sex">Male</label>
+  <input id="male_sex" type="radio" name="cat[sex]" value="M" <%= "checked" if cat.sex == "M" %> >
+  <label for="female_sex">Female</label>
+  <input id="female_sex" type="radio" name="cat[sex]" value="F" <%= "checked" if cat.sex == "F" %> >
+  <br>
 
   <label for="color">Pick cat color!</label><br>
   <select id="color" name="cat[color]">
-    <option value=""></option>
-    <option value="brown" <%= "selected" if cat && cat.color == "brown" %> >Brown</option>
-    <option value="orange" <%= "selected" if cat && cat.color == "orange" %> >Orange</option>
-    <option value="black" <%= "selected" if cat && cat.color == "black" %> >Black</option>
-    <option value="calico" <%= "selected" if cat && cat.color == "calico" %> >Calico</option>
+    <option ></option>
+    <% Cat::CAT_COLOR.each do |color| %>
+
+      <option
+        value="<%= color %>"
+        <%= "selected" if cat.color == color %> >
+        <%= color.capitalize %>
+      </option>
+
+    <% end %>
+
   </select>
   <br>
 
+
   <label for="birth_date">Pick the birth date!</label>
-  <input id="birth_date" type="date" name="cat[birth_date]" value="<%= cat.birth_date unless cat.nil? %>"></input><br>
+  <input id="birth_date" type="date" name="cat[birth_date]" value="<%= cat.birth_date %>"></input><br>
 
   <label for="description">Describe your cat:</label>
-  <textarea id="description" name="cat[description]" ><%= cat.description unless cat.nil? %></textarea>
+  <textarea id="description" name="cat[description]" ><%= cat.description %></textarea>
   <br>
 
   <button type="submit">Submit</button>

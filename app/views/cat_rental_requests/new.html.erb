@@ -5,7 +5,7 @@
   <select id="cat-id" name="cat_rental_request[cat_id]">
     <option value=""></option><br>
     <% @cats.each do |cat| %>
-      <option value="<%= cat.id %>"><%= cat.name %></option><br>
+      <option value="<%= cat.id %>" <%= "selected" if @id == cat.id %> ><%= cat.name %></option><br>
     <% end %>
   </select><br>
 
