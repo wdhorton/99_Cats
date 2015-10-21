@@ -9,7 +9,7 @@ class Cat < ActiveRecord::Base
   validate :must_be_born_in_the_past
 
   has_many :cat_rental_requests, dependent: :destroy
-
+  
   def age
     time_ago_in_words(birth_date)
   end
