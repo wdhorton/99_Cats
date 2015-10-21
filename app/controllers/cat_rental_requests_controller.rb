@@ -14,7 +14,7 @@ class CatRentalRequestsController < ApplicationController
 
   def new
     @cats = Cat.all
-    @id = params[:id].to_i
+    @id = params[:id]
     render :new
   end
 

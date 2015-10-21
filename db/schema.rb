@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151021192547) do
+ActiveRecord::Schema.define(version: 20151021212917) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -23,6 +23,7 @@ ActiveRecord::Schema.define(version: 20151021192547) do
     t.string   "status",     default: "Pending"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "user_id",                        null: false
   end
 
   add_index "cat_rental_requests", ["cat_id"], name: "index_cat_rental_requests_on_cat_id", using: :btree
@@ -40,15 +41,20 @@ ActiveRecord::Schema.define(version: 20151021192547) do
 
   add_index "cats", ["user_id"], name: "index_cats_on_user_id", using: :btree
 
+  create_table "sessions", force: :cascade do |t|
+    t.integer "user_id",       null: false
+    t.string  "session_token"
+  end
+
+  add_index "sessions", ["user_id"], name: "index_sessions_on_user_id", using: :btree
+
   create_table "users", force: :cascade do |t|
     t.string   "username",        null: false
     t.string   "password_digest", null: false
-    t.string   "session_token",   null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   add_index "users", ["password_digest"], name: "index_users_on_password_digest", using: :btree
-  add_index "users", ["session_token"], name: "index_users_on_session_token", using: :btree
 
 end
