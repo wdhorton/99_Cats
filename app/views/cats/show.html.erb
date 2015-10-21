@@ -20,10 +20,14 @@
 
   <% @cat.cat_rental_requests.sort_by { |request| request.start_date }.each do |request| %>
     <tr>
-      <td> <%= request.id %> </td>
-      <td> <%= request.start_date %> </td>
-      <td> <%= request.end_date %> </td>
-      <td> <%= (button_to "Approve", approve_cat_rental_request_url(request), method: "patch") if request.status == "Pending" %> </td>
+      <td>
+        <%= request.id %> </td>
+      <td>
+        <%= request.start_date %> </td>
+      <td>
+        <%= request.end_date %> </td>
+      <td>
+        <%= (button_to "Approve", approve_cat_rental_request_url(request), method: "patch") if request.status == "Pending" && @cat.owner == current_user %> </td>
     </tr>
   <% end %>
 </table>

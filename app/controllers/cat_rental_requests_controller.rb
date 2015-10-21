@@ -1,5 +1,7 @@
 class CatRentalRequestsController < ApplicationController
 
+  before_action :ensure_user_owns_cat, only: [:approve, :deny]
+
   def index
     @requests = CatRentalRequest.all
     render :index
@@ -8,15 +10,6 @@ class CatRentalRequestsController < ApplicationController
   def show
     @request = CatRentalRequest.find(params[:id])
     render :show
-  end
-
-  def update
-  end
-
-  def edit
-  end
-
-  def destroy
   end
 
   def new

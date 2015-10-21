@@ -2,14 +2,15 @@ class Cat < ActiveRecord::Base
   include ActionView::Helpers::DateHelper
   CAT_COLOR = ["brown", "black", "orange", "calico"]
 
-  validates :birth_date, :color, :name, :sex, presence: true
+  validates :birth_date, :color, :name, :sex, :owner, presence: true
   validates :color, inclusion: { in: CAT_COLOR }
   validates :sex, inclusion: %w(F M)
 
   validate :must_be_born_in_the_past
 
   has_many :cat_rental_requests, dependent: :destroy
-  
+  belongs_to :owner, class_name: "User", foreign_key: :user_id
+
   def age
     time_ago_in_words(birth_date)
   end
